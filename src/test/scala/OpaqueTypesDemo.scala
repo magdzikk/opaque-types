@@ -9,11 +9,15 @@ object books {
 
   opaque type Pages = Int
 
+  def Pages(value: Int): Pages = value
+
   object Pages {
     def of(value: Int): Pages = value
   }
 
   opaque type Year = Int
+
+  def Year(value: Int): Year = value
 
   object Year {
     def of(value: Int): Year = value
@@ -24,7 +28,7 @@ object books {
 class OpaqueTypesDemo extends AnyWordSpec with Matchers {
   "Opaque Types" should {
     "work" in {
-      val book = Book("Pippi Longstocking", Pages.of(350), Year.of(2010))
+      val book = Book("Pippi Longstocking", Pages(350), Year(2010))
       book.pages should be(350)
     }
   }

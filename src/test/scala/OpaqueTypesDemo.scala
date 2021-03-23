@@ -13,6 +13,8 @@ object books {
 
   object Pages {
     def of(value: Int): Pages = value
+
+    def safe(value: Int): Option[Pages] = if (value > 0) Some(value) else None
   }
 
   opaque type Year = Int
@@ -21,6 +23,8 @@ object books {
 
   object Year {
     def of(value: Int): Year = value
+
+    def safe(value: Int): Option[Year] = if (value > 1450 && value < 2021) Some(value) else None
   }
 
 }
@@ -30,6 +34,18 @@ class OpaqueTypesDemo extends AnyWordSpec with Matchers {
     "work" in {
       val book = Book("Pippi Longstocking", Pages(350), Year(2010))
       book.pages should be(350)
+
+      val invalid = for {
+        pages <- Pages.safe(2010)
+        year <- Year.safe(350)
+      } yield Book("Calvin and Hobbes", pages, year)
+      invalid shouldBe None
+
+      val valid = for {
+        pages <- Pages.safe(350)
+        year <- Year.safe(2010)
+      } yield Book("Calvin and Hobbes", pages, year)
+      valid shouldBe defined
     }
   }
 }

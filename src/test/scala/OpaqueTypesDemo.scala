@@ -4,11 +4,14 @@ import java.time.LocalDate
 
 class OpaqueTypesDemo extends AnyWordSpec with Matchers {
 
-  case class Book(title: String, pages: Int, published: Int)
+  case class Book(title: String, pages: Pages, published: Year)
+
+  opaque type Pages = Int
+  opaque type Year = Int
 
   "Opaque Types" should {
     "work" in {
-      val book = Book("Pippi Longstocking", 2010, 350)
+      val book = Book("Pippi Longstocking", 350, 2010)
       book.pages should be(350)
     }
   }

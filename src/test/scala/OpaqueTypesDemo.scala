@@ -23,6 +23,9 @@ object books {
     def safe(value: Int): Option[Year] = if (value > 1450 && value < 2021) Some(value) else None
   }
 
+  extension (year: Year)
+    def toAge(now: LocalDate): Int = now.getYear - year
+
 }
 
 class OpaqueTypesDemo extends AnyWordSpec with Matchers {
@@ -30,6 +33,8 @@ class OpaqueTypesDemo extends AnyWordSpec with Matchers {
     "work" in {
       val book = Book("Pippi Longstocking", Pages(350), Year(2010))
       book.pages should be(350)
+
+      book.published.toAge(LocalDate.now) shouldBe 11
 
       val invalid = for {
         pages <- Pages.safe(2010)

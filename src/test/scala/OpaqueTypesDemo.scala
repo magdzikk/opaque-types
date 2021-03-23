@@ -17,7 +17,7 @@ object books {
     def safe(value: Int): Option[Pages] = if (value > 0) Some(value) else None
   }
 
-  opaque type Year = Int
+  opaque type Year <: Int = Int
 
   def Year(value: Int): Year = value
 
@@ -39,6 +39,7 @@ class OpaqueTypesDemo extends AnyWordSpec with Matchers {
       book.pages should be(350)
 
       book.published.toAge(LocalDate.now) shouldBe 11
+      legacy.shouldBeRenovated(book.published) shouldBe false
 
       val invalid = for {
         pages <- Pages.safe(2010)

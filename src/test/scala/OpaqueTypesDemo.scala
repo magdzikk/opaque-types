@@ -1,32 +1,28 @@
-import books._
+import books.*
+import io.github.iltotore.iron.*
+import io.github.iltotore.iron.constraint.all.Positive
+import io.github.iltotore.iron.constraint.numeric.{Greater, Less}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
 import java.time.LocalDate
 
 object books {
 
   case class Book(title: String, pages: Pages, published: Year)
 
-  opaque type Pages = Int
+  opaque type Pages = Int :| Positive
 
-  object Pages {
-    def apply(value: Int): Pages = value
+  object Pages extends RefinedTypeOps[Int, Positive, Pages]
 
-    def safe(value: Int): Option[Pages] = if (value > 0) Some(value) else None
-  }
+  opaque type Year <: Int = Int :| (Greater[1450] & Less[2021])
 
-  opaque type Year <: Int = Int
-
-  object Year {
-    def apply(value: Int): Year = value
-
-    def safe(value: Int): Option[Year] = if (value > 1450 && value < 2021) Some(value) else None
-  }
+  object Year extends RefinedTypeOps[Int, (Greater[1450] & Less[2021]), Year]
 
   extension (year: Year)
     def toAge(now: LocalDate): Int = now.getYear - year
-
 }
+
 
 class OpaqueTypesDemo extends AnyWordSpec with Matchers {
   "Opaque Types" should {
@@ -34,20 +30,20 @@ class OpaqueTypesDemo extends AnyWordSpec with Matchers {
       val book = Book("Pippi Longstocking", Pages(350), Year(2010))
       book.pages should be(350)
 
-      book.published.toAge(LocalDate.now) shouldBe 11
+      book.published.toAge(LocalDate.now) shouldBe 14
       legacy.shouldBeRenovated(book.published) shouldBe false
 
       val invalid = for {
-        pages <- Pages.safe(2010)
-        year <- Year.safe(350)
+        pages <- Pages.option(2010)
+        year <- Year.option(350)
       } yield Book("Calvin and Hobbes", pages, year)
-      invalid shouldBe None
+      invalid `shouldBe` None
 
       val valid = for {
-        pages <- Pages.safe(350)
-        year <- Year.safe(2010)
+        pages <- Pages.option(350)
+        year <- Year.option(2010)
       } yield Book("Calvin and Hobbes", pages, year)
-      valid shouldBe defined
+      valid `shouldBe` defined
     }
   }
 }

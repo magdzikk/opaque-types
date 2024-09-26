@@ -11,3 +11,4 @@ Steps:
 6. [Safe construction](https://github.com/magdzikk/opaque-types/blob/6-safe-construction/src/test/scala/OpaqueTypesDemo.scala)
 7. [Instance methods](https://github.com/magdzikk/opaque-types/blob/7-instance-methods/src/test/scala/OpaqueTypesDemo.scala)
 8. [Bounds](https://github.com/magdzikk/opaque-types/blob/8-bounds/src/test/scala/OpaqueTypesDemo.scala)
+9. [Iron](https://github.com/magdzikk/opaque-types/blob/9-iron/src/test/scala/OpaqueTypesDemo.scala)
